@@ -51,7 +51,6 @@ class RecentEditsPanel(object):
         # Last n edited pages
         self.last_edits = PageRevision.objects.filter(
             user=self.request.user,
-            created_at=F('page__latest_revision_created_at')
         ).order_by('-created_at')[:5]
 
     def render(self):
