@@ -131,40 +131,20 @@ class Site(models.Model):
         except (AttributeError, KeyError):
             port = request.META.get('SERVER_PORT')
 
-        sites = list(Site.objects.annotate(match=Case(
-            # annotate the results by best choice descending
-
-            # put exact hostname+port match first
-            When(hostname=hostname, port=port, then=MATCH_HOSTNAME_PORT),
-
-            # then put hostname+default (better than just hostname or just default)
-            When(hostname=hostname, is_default_site=True, then=MATCH_HOSTNAME_DEFAULT),
-
-            # then match default with different hostname. there is only ever
-            # one default, so order it above (possibly multiple) hostname
-            # matches so we can use sites[0] below to access it
-            When(is_default_site=True, then=MATCH_DEFAULT),
-
-            # because of the filter below, if it's not default then its a hostname match
-            default=MATCH_HOSTNAME,
-
-            output_field=IntegerField(),
-        )).filter(Q(hostname=hostname) | Q(is_default_site=True)).order_by(
-            'match'
-        ).select_related(
-            'root_page'
-        ))
-
-        if sites:
-            # if theres a unique match or hostname (with port or default) match
-            if len(sites) == 1 or sites[0].match in (MATCH_HOSTNAME_PORT, MATCH_HOSTNAME_DEFAULT):
-                return sites[0]
-
-            # if there is a default match with a different hostname, see if
-            # there are many hostname matches. if only 1 then use that instead
-            # otherwise we use the default
-            if sites[0].match == MATCH_DEFAULT:
-                return sites[len(sites) == 2]
+        # put exact hostname+port match first
+        site = Site.objects.filter(hostname=hostname, port=port).first()
+        if site:
+            return site
+        
+        # then put hostname+default (better than just hostname or just default)
+        site = Site.objects.filter(hostname=hostname, is_default_site=True).first()
+        if site:
+            return site
+            
+        # then match default with different hostname
+        site = Site.objects.filter(is_default_site=True).first()
+        if site:
+            return site
 
         raise Site.DoesNotExist()
 
