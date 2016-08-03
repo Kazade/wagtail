@@ -43,7 +43,7 @@ def create_project(parser, options, args):
     utility_args = ['django-admin.py',
                     'startproject',
                     '--template=' + template_path,
-                    '--ext=html,rst',
+                    '--ext=html,yaml,py',
                     project_name]
 
     if dest_dir:
