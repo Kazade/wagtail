@@ -15,7 +15,7 @@ from wagtail.wagtailadmin.menu import admin_menu
 from wagtail.wagtailadmin.search import admin_search_areas
 from wagtail.wagtailcore import hooks
 from wagtail.wagtailcore.models import (
-    PageViewRestriction, UserPagePermissionsProxy, get_navigation_menu_items)
+    Page, PageViewRestriction, UserPagePermissionsProxy, get_navigation_menu_items)
 from wagtail.wagtailcore.utils import cautious_slugify as _cautious_slugify
 from wagtail.wagtailcore.utils import camelcase_to_underscore, escape_script
 
@@ -120,14 +120,15 @@ def page_permissions(context, page):
 def test_page_is_public(context, page):
     """
     Usage: {% test_page_is_public page as is_public %}
-    Sets 'is_public' to True iff there are no page view restrictions in place on
+    Sets 'is_public' to True if there are no page view restrictions in place on
     this page.
     Caches the list of page view restrictions in the context, to avoid repeated
     DB queries on repeated calls.
     """
     if 'all_page_view_restriction_paths' not in context:
-        context['all_page_view_restriction_paths'] = PageViewRestriction.objects.select_related('page').values_list(
-            'page__path', flat=True
+        restricted_pages = PageViewRestriction.objects.all().values_list('page_id', flat=True)
+        context['all_page_view_restriction_paths'] = Page.objects.filter(pk__in=restricted_pages).values_list(
+            'path', flat=True
         )
 
     is_private = any([
