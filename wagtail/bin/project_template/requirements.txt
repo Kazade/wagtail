@@ -1,0 +1,25 @@
+djangae==0.9.6
+django>=1.8,<1.10
+git+https://github.com/potatolondon/wagtail-gae.git#egg=wagtail
+git+https://github.com/mozilla/django-csp.git#egg=djangocsp
+git+https://github.com/adamalton/django-csp-reports.git#egg=cspreports
+django-session-csrf
+nose
+six
+
+# Wagtail requirements
+django-compressor
+django-taggit
+django-modelcluster
+Pillow
+django-treebeard>=3.0,<5.0
+djangorestframework>=3.1.3
+beautifulsoup4>=4.4.1
+html5lib>=0.999,<1
+Unidecode>=0.04.14
+Willow>=0.3b4,<0.4
+
+# Uncomment these to use mapreduce or djangae.contrib.uniquetool (which uses mapreduce)
+# These are forks of Google's libraries, which contain various fixes and patches
+#git+https://github.com/potatolondon/appengine-pipelines.git
+#git+https://github.com/potatolondon/potato-mapreduce.git#egg=mapreduce

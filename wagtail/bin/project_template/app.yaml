@@ -1,0 +1,54 @@
+application: {{ project_name }}
+version: 1
+runtime: python27
+api_version: 1
+threadsafe: true
+
+libraries:
+- name: PIL
+  version: "1.1.7"
+
+handlers:
+
+- url: /_ah/(mapreduce|queue|warmup|start|stop).*
+  script: {{ project_name }}.wsgi.application
+  login: admin
+  secure: always
+
+- url: /_ah/internalupload.*
+  script: {{ project_name }}.wsgi.application
+  secure: always
+
+- url: /static/admin/
+  static_dir: sitepackages/django/contrib/admin/static/admin/
+  secure: always
+  
+- url: /static/wagtailadmin/
+  static_dir: sitepackages/wagtail/wagtailadmin/static/wagtailadmin/
+  secure: always
+
+# Set Django admin to be login:admin as well as Django's is_staff restriction
+- url: /django-admin.*
+  script: {{ project_name }}.wsgi.application
+  secure: always
+  login: admin
+  
+# Set Wagtail admin to be login:admin as well as Django's is_staff restriction
+- url: /admin.*
+  script: {{ project_name }}.wsgi.application
+  secure: always
+  login: admin
+
+- url: /.*
+  script: {{ project_name }}.wsgi.application
+  secure: always
+
+skip_files:
+    - manage.py
+    - README.md
+    - install_deps
+    - requirements.txt
+    - sitepackages/google_appengine*
+    - \.storage.*
+    - \.git
+    - (.*)\.pyc
