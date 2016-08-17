@@ -39,7 +39,7 @@ There could be a better way to setup your local environment, but I've done it th
   ./manage.py migrate
   ./manage.py migrate wagtailimages 0004 --fake
   ./manage.py migrate
-  ./manage.py migrate wagtailimages 0012
+  ./manage.py migrate wagtailimages 0012 --fake
   ./manage.py migrate
   ```
   
