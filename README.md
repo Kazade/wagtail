@@ -32,6 +32,7 @@ There could be a better way to setup your local environment, but I've done it th
  `wagtail/bin/wagtail.py` that you just cloned.
 - Run `./install_deps`
 - Run migrations, skipping those that are not working yet: 
+
   ```
   ./manage.py migrate
   ./manage.py migrate wagtaildocs 0006 --fake
@@ -41,6 +42,7 @@ There could be a better way to setup your local environment, but I've done it th
   ./manage.py migrate wagtailimages 0012
   ./manage.py migrate
   ```
+  
 3. In your local project, remove `djangae` and `wagtail` from packages, and symlink
 your local copies of wagtail-gae and djangae for easier development. 
 4. :tada:
