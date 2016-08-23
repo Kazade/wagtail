@@ -40,7 +40,8 @@ def index(request, parent_page_id=None):
     else:
         parent_page = Page.get_first_root_node()
 
-    pages = parent_page.get_children().prefetch_related('content_type')
+    pages_pk = parent_page.get_children().values_list('pk', flat=True)
+    pages = Page.objects.filter(pk__in=pages_pk)
 
     # Get page ordering
     ordering = request.GET.get('ordering', '-latest_revision_created_at')
