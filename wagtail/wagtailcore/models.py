@@ -410,8 +410,11 @@ class Page(six.with_metaclass(PageBase, MP_Node, index.Indexed, ClusterableModel
         if parent_page is None:
             # the root page's slug can be whatever it likes...
             return True
-
+        
         siblings = parent_page.get_children()
+        if not siblings:
+            return True
+        
         if page:
             siblings = siblings.not_page(page)
 
