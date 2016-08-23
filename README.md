@@ -12,15 +12,7 @@ on Google App Engine using Djangae to provide database backend.
 
 ## TODO
 
-- [ ] Fix three migrations that don't work at the moment: 
- - [ ] wagtaildocs 0006
- - [ ] wagtailimages 0004
- - [ ] wagtailimages 0012
-- [ ] Catch all join queries and replace them with something Djangae can do
-- [ ] Auth: need replacing Django's auth with gauth, because Permissions and Groups that Wagtail uses break lots of stuff :(
-- [ ] Search: haven't looked yet into what needs happen for search to work
-- [ ] Check images: do they work now? Do we need to update something to make them work with CSG?
-- [ ] Run Wagtail test suite 
+[Look at Issues](https://github.com/potatolondon/wagtail-gae/issues) 
 
 # How to start developing Wagtail-GAE?
 
@@ -32,15 +24,17 @@ There could be a better way to setup your local environment, but I've done it th
  `wagtail/bin/wagtail.py` that you just cloned.
 - Run `./install_deps`
 - Run migrations, skipping those that are not working yet: 
+
   ```
   ./manage.py migrate
   ./manage.py migrate wagtaildocs 0006 --fake
   ./manage.py migrate
   ./manage.py migrate wagtailimages 0004 --fake
   ./manage.py migrate
-  ./manage.py migrate wagtailimages 0012
+  ./manage.py migrate wagtailimages 0012 --fake
   ./manage.py migrate
   ```
+  
 3. In your local project, remove `djangae` and `wagtail` from packages, and symlink
 your local copies of wagtail-gae and djangae for easier development. 
 4. :tada:
