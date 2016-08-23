@@ -1,7 +1,8 @@
 from __future__ import absolute_import, unicode_literals
 
 from django.conf import settings
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.core.paginator import EmptyPage, PageNotAnInteger
+from djangae.core.paginator import Paginator
 from django.http import JsonResponse
 from django.shortcuts import render
 
@@ -66,7 +67,7 @@ def search(
         except PageNotAnInteger:
             search_results = paginator.page(1)
         except EmptyPage:
-            search_results = paginator.page(paginator.num_pages)
+            search_results = paginator.page(1)
     else:
         query = None
         search_results = None

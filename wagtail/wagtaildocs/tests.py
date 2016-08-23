@@ -150,7 +150,7 @@ class TestDocumentIndexView(TestCase, WagtailTestUtils):
         self.assertTemplateUsed(response, 'wagtaildocs/documents/index.html')
 
         # Check that we got the last page
-        self.assertEqual(response.context['documents'].number, response.context['documents'].paginator.num_pages)
+        self.assertEqual(response.context['documents'].number, 1)
 
     def test_ordering(self):
         orderings = ['title', '-created_at']
@@ -686,7 +686,7 @@ class TestDocumentChooserView(TestCase, WagtailTestUtils):
         self.assertTemplateUsed(response, 'wagtaildocs/documents/list.html')
 
         # Check that we got the last page
-        self.assertEqual(response.context['documents'].number, response.context['documents'].paginator.num_pages)
+        self.assertEqual(response.context['documents'].number, 1)
 
 
 class TestDocumentChooserChosenView(TestCase, WagtailTestUtils):

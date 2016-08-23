@@ -12,7 +12,7 @@
     {% url linkurl as url_to_use %}
 {% endif %}
 <div class="pagination">
-    <p>{% blocktrans with page_num=items.number total_pages=items.paginator.num_pages %}Page {{ page_num }} of {{ total_pages }}.{% endblocktrans %}</p>
+    <p>{% blocktrans with page_num=items.number %}Page {{ page_num }}.{% endblocktrans %}</p>
     <ul>
         <li class="prev">
             {% if items.has_previous %}

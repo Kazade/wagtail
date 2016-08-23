@@ -13,7 +13,8 @@ from django.contrib.admin.utils import (
     get_fields_from_path, lookup_needs_distinct, prepare_lookup_value, quote, unquote)
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ImproperlyConfigured, PermissionDenied, SuspiciousOperation
-from django.core.paginator import InvalidPage, Paginator
+from django.core.paginator import InvalidPage
+from djangae.core.paginator import Paginator
 from django.db import models
 from django.db.models.constants import LOOKUP_SEP
 from django.db.models.fields import FieldDoesNotExist

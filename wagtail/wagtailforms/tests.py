@@ -395,7 +395,7 @@ class TestFormsIndex(TestCase):
         self.assertTemplateUsed(response, 'wagtailforms/index.html')
 
         # Check that it got the last page
-        self.assertEqual(response.context['form_pages'].number, response.context['form_pages'].paginator.num_pages)
+        self.assertEqual(response.context['form_pages'].number, 1)
 
     def test_cannot_see_forms_without_permission(self):
         # Login with as a user without permission to see forms
@@ -530,7 +530,7 @@ class TestFormsSubmissions(TestCase, WagtailTestUtils):
         self.assertTemplateUsed(response, 'wagtailforms/index_submissions.html')
 
         # Check that we got the last page
-        self.assertEqual(response.context['submissions'].number, response.context['submissions'].paginator.num_pages)
+        self.assertEqual(response.context['submissions'].number, 1)
 
     def test_list_submissions_csv_export(self):
         response = self.client.get(

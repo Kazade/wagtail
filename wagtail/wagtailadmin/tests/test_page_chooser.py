@@ -177,7 +177,6 @@ class TestChooserBrowseChild(TestCase, WagtailTestUtils):
         self.setup_pagination_test_data()
 
         response = self.get()
-        self.assertEqual(response.context['pages'].paginator.num_pages, 5)
         self.assertEqual(response.context['pages'].number, 1)
 
     def test_pagination_another_page(self):

@@ -96,7 +96,7 @@ class TestSearchView(TestCase):
 
         # Test that we got the last page
         search_results = response.context['search_results']
-        self.assertEqual(search_results.number, search_results.paginator.num_pages)
+        self.assertEqual(search_results.number, 1)
 
     @pagination_test
     def test_get_zero_page(self):
@@ -106,7 +106,7 @@ class TestSearchView(TestCase):
 
         # Test that we got the first page
         search_results = response.context['search_results']
-        self.assertEqual(search_results.number, search_results.paginator.num_pages)
+        self.assertEqual(search_results.number, 1)
 
     @pagination_test
     def test_get_10th_page_backwards_compatibility_with_p(self):

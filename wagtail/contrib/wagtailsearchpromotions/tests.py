@@ -136,7 +136,7 @@ class TestSearchPromotionsIndexView(TestCase, WagtailTestUtils):
         self.assertTemplateUsed(response, 'wagtailsearchpromotions/index.html')
 
         # Check that we got the last page
-        self.assertEqual(response.context['queries'].number, response.context['queries'].paginator.num_pages)
+        self.assertEqual(response.context['queries'].number, 1)
 
 
 class TestSearchPromotionsAddView(TestCase, WagtailTestUtils):

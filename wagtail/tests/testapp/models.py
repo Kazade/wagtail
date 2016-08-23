@@ -5,7 +5,8 @@ import os
 
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.core.paginator import EmptyPage, PageNotAnInteger
+from djangae.core.paginator import Paginator
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from modelcluster.contrib.taggit import ClusterTaggableManager
@@ -290,7 +291,7 @@ class EventIndex(Page):
         except PageNotAnInteger:
             events = paginator.page(1)
         except EmptyPage:
-            events = paginator.page(paginator.num_pages)
+            events = paginator.page(1)
 
         # Update context
         context = super(EventIndex, self).get_context(request)
@@ -308,7 +309,8 @@ class EventIndex(Page):
 
     def get_static_site_paths(self):
         # Get page count
-        page_count = self.get_paginator().num_pages
+        # OLA: Replaed this with 0 as we can't get number of pages here. 
+        page_count = 0
 
         # Yield a path for each page
         for page in range(page_count):

@@ -215,7 +215,7 @@ class TestPageExplorer(TestCase, WagtailTestUtils):
         self.assertTemplateUsed(response, 'wagtailadmin/pages/index.html')
 
         # Check that we got the last page
-        self.assertEqual(response.context['pages'].number, response.context['pages'].paginator.num_pages)
+        self.assertEqual(response.context['pages'].number, 1)
 
     def test_listing_uses_specific_models(self):
         # SingleEventPage has custom URL routing; the 'live' link in the listing
