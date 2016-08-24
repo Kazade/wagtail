@@ -26,6 +26,10 @@ handlers:
 - url: /static/wagtailadmin/
   static_dir: sitepackages/wagtail/wagtailadmin/static/wagtailadmin/
   secure: always
+  
+- url: /static/wagtailimages/
+  static_dir: sitepackages/wagtail/wagtailimages/static/wagtailimages/
+  secure: always
 
 # Set Django admin to be login:admin as well as Django's is_staff restriction
 - url: /django-admin.*
