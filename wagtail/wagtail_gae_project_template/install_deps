@@ -25,8 +25,7 @@ APPENGINE_TARGET_DIR = os.path.join(TARGET_DIR, "google_appengine")
 APPENGINE_SDK_VERSION = "1.9.40"
 APPENGINE_SDK_FILENAME = "google_appengine_%s.zip" % APPENGINE_SDK_VERSION
 
-# Google move versions from 'featured' to 'deprecated' when they bring
-# out new releases
+# Google move versions from 'featured' to 'deprecated' when they bring out new releases
 FEATURED_SDK_REPO = "https://storage.googleapis.com/appengine-sdks/featured/"
 DEPRECATED_SDK_REPO = "https://storage.googleapis.com/appengine-sdks/deprecated/%s/" % APPENGINE_SDK_VERSION.replace('.', '')
 
@@ -45,7 +44,7 @@ if __name__ == "__main__":
     )
     command_args = parser.parse_args()
 
-    #Make sure the user has everything they need
+    # Make sure the user has everything they need
     where = 'which'
     if platform.system() == 'Windows':
         where = 'where'
@@ -63,13 +62,13 @@ if __name__ == "__main__":
     if not os.path.exists(APPENGINE_TARGET_DIR):
         print('Downloading the AppEngine SDK...')
 
-        #First try and get it from the 'featured' folder
+        # First try and get it from the 'featured' folder
         sdk_file = urlopen(FEATURED_SDK_REPO + APPENGINE_SDK_FILENAME)
         if sdk_file.getcode() == 404:
             #Failing that, 'deprecated'
             sdk_file = urlopen(DEPRECATED_SDK_REPO + APPENGINE_SDK_FILENAME)
 
-        #Handle other errors
+        # Handle other errors
         if sdk_file.getcode() >= 299:
             raise Exception('App Engine SDK could not be found. {} returned code {}.'.format(
                 sdk_file.geturl(), sdk_file.getcode()))
@@ -77,7 +76,7 @@ if __name__ == "__main__":
         zipfile = ZipFile(StringIO(sdk_file.read()))
         zipfile.extractall(TARGET_DIR)
 
-        #Make sure the dev_appserver and appcfg are executable
+        # Make sure the dev_appserver and appcfg are executable
         for module in ("dev_appserver.py", "appcfg.py"):
             app = os.path.join(APPENGINE_TARGET_DIR, module)
             st = os.stat(app)
@@ -91,8 +90,7 @@ if __name__ == "__main__":
             os.path.isdir(wagaetail_sitepackages_dir) and os.path.islink(wagaetail_sitepackages_dir)):
         os.rmdir(wagaetail_sitepackages_dir)
 
-    # Remove all folders and files, we leave symlinks as they will be pointing
-    #to submodules
+    # Remove all folders and files, we leave symlinks as they will be pointing to submodules
     filenames = (filename for filename in os.listdir(TARGET_DIR) if filename not in FILES_IGNORED_FOR_DELETION)
     for filename in filenames:
         path = os.path.join(TARGET_DIR, filename)
