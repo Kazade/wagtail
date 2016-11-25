@@ -25,11 +25,12 @@ There could be a better way to setup your local environment, but I've done it th
 The virtualenv will serve as the environment of a test project, a django application that will run wagtail-gae.
 
 4. Run `./setup.py develop` in wagtail-gae project root. This will install wagtail-gae into your virtualenv but instead of copying the source files into your virtualenv's `sitepackages` directory will install a symlink to current directory. This means changes to wagtail-gae will have immediate effect when you use wagtail in your virtualenv.
-
-5. `cd` out of `wagtail-gae` and create a directory under your workspace for a test project.
-6. Inside the new directory for the test project and with the virtualenv activated, run `wagaetail start [test-site-name]`. This will create a basic wagtail/djangae application structure.
-7. `cd` into `[test-site-name]` and run `./install_deps --wagae-develop`. This will create and populate the local `sitepackages/` in your test project including the AppEngine SDK. `--wagae-develop` symlinks
-8. Run migrations, skipping those that are not working yet:
+5. Run `npm install` to install the wagtail admin frontend dependencies.
+6. Run `npm run build` to build frontend assets.
+7. `cd` out of `wagtail-gae` and create a directory under your workspace for a test project.
+8. Inside the new directory for the test project and with the virtualenv activated, run `wagaetail start [test-site-name]`. This will create a basic wagtail/djangae application structure.
+9. `cd` into `[test-site-name]` and run `./install_deps --wagae-develop`. This will create and populate the local `sitepackages/` in your test project including the AppEngine SDK. `--wagae-develop` symlinks
+10. Run migrations, skipping those that are not working yet:
   ```
   ./manage.py migrate
   ./manage.py migrate wagtaildocs 0006 --fake
