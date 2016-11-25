@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 
+import sys
 import os
 import subprocess
 import shutil
 import stat
 import platform
+import argparse
 
 from StringIO import StringIO
 from zipfile import ZipFile
@@ -30,6 +32,19 @@ DEPRECATED_SDK_REPO = "https://storage.googleapis.com/appengine-sdks/deprecated/
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description='Install wagaetail dependencies into local sitepackages/ directory along with the '
+                    'Google AppEngine SDK.'
+    )
+    parser.add_argument(
+        '--wagae-develop',
+        action='store_true',
+        help='Setup for wagaetail development. Installs a symlink in sitepackages/ to where wagtail is currently '
+             'installed in the currently active virtualenv. Assumes wagaetail was installed via setuptools in '
+             '\'develop\' mode.'
+    )
+    command_args = parser.parse_args()
+
     #Make sure the user has everything they need
     where = 'which'
     if platform.system() == 'Windows':
@@ -56,7 +71,8 @@ if __name__ == "__main__":
 
         #Handle other errors
         if sdk_file.getcode() >= 299:
-            raise Exception('App Engine SDK could not be found. {} returned code {}.'.format(sdk_file.geturl(), sdk_file.getcode()))
+            raise Exception('App Engine SDK could not be found. {} returned code {}.'.format(
+                sdk_file.geturl(), sdk_file.getcode()))
 
         zipfile = ZipFile(StringIO(sdk_file.read()))
         zipfile.extractall(TARGET_DIR)
@@ -69,8 +85,13 @@ if __name__ == "__main__":
     else:
         print('Not updating SDK as it exists. Remove {} and re-run to get the latest SDK'.format(APPENGINE_TARGET_DIR))
 
+    # Remove develop symlink (if it exists) before running pip
+    wagaetail_sitepackages_dir = os.path.join(TARGET_DIR, 'wagtail')
+    if (command_args.wagae_develop and
+            os.path.isdir(wagaetail_sitepackages_dir) and os.path.islink(wagaetail_sitepackages_dir)):
+        os.rmdir(wagaetail_sitepackages_dir)
 
-    #Remove all folders and files, we leave symlinks as they will be pointing
+    # Remove all folders and files, we leave symlinks as they will be pointing
     #to submodules
     filenames = (filename for filename in os.listdir(TARGET_DIR) if filename not in FILES_IGNORED_FOR_DELETION)
     for filename in filenames:
@@ -84,3 +105,26 @@ if __name__ == "__main__":
     args = ["pip", "install", "-r", REQUIREMENTS_FILE, "-t", TARGET_DIR, "-I"]
     p = subprocess.Popen(args)
     p.wait()
+
+    # If develop mode, install symlink to checked out wagaetail project in sitepackages/
+    if command_args.wagae_develop:
+        # Check wagaetail is installed and import module
+        try:
+            wagaetail = __import__('wagtail')
+        except ImportError:
+            raise Exception("wagaetail not installed. Have you installed wagaetail into your virtualenv via "
+                            "`setup.py develop`?")
+
+        # Get path to wagaetail module project dir
+        wagaetail_project_dir = os.path.dirname(wagaetail.__file__)
+
+        # Remove wagaetail distribution installed via pip above
+        shutil.rmtree(wagaetail_sitepackages_dir)
+
+        # Create symbolic link to wagaetail
+        os.symlink(wagaetail_project_dir, wagaetail_sitepackages_dir)
+
+        print("[wagae-develop mode] Symbolic link created at {} to {}".format(
+            wagaetail_sitepackages_dir,
+            wagaetail_project_dir)
+        )
