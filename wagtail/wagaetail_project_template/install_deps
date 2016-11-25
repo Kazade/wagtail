@@ -105,6 +105,8 @@ if __name__ == "__main__":
 
     # If develop mode, install symlink to checked out wagaetail project in sitepackages/
     if command_args.wagae_develop:
+        print("Wagaetail development mode...")
+
         # Check wagaetail is installed and import module
         try:
             wagaetail = __import__('wagtail')
@@ -115,13 +117,13 @@ if __name__ == "__main__":
         # Get path to wagaetail module project dir
         wagaetail_project_dir = os.path.dirname(wagaetail.__file__)
 
+        print("Creating symbolic link:\n  {} ->\n  {}".format(
+            wagaetail_sitepackages_dir,
+            wagaetail_project_dir)
+        )
+
         # Remove wagaetail distribution installed via pip above
         shutil.rmtree(wagaetail_sitepackages_dir)
 
         # Create symbolic link to wagaetail
         os.symlink(wagaetail_project_dir, wagaetail_sitepackages_dir)
-
-        print("[wagae-develop mode] Symbolic link created at {} to {}".format(
-            wagaetail_sitepackages_dir,
-            wagaetail_project_dir)
-        )
