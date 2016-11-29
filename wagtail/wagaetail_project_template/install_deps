@@ -28,18 +28,17 @@ APPENGINE_SDK_FILENAME = "google_appengine_%s.zip" % APPENGINE_SDK_VERSION
 FEATURED_SDK_REPO = "https://storage.googleapis.com/appengine-sdks/featured/"
 DEPRECATED_SDK_REPO = "https://storage.googleapis.com/appengine-sdks/deprecated/%s/" % APPENGINE_SDK_VERSION.replace('.', '')
 
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description='Install wagaetail dependencies into local sitepackages/ directory along with the '
                     'Google AppEngine SDK.'
     )
     parser.add_argument(
-        '--wagae-develop',
-        action='store_true',
-        help='Setup for wagaetail development. Installs a symlink in sitepackages/ to where wagtail is currently '
-             'installed in the currently active virtualenv. Assumes wagaetail was installed via setuptools in '
-             '\'develop\' mode.'
+        'editable_libs',
+        nargs='*',
+        help='Attempt to create symlink installs in sitepackages/ for the given package names. Installs a symlink in '
+             'sitepackages/ to where package is installed in the currently active virtualenv. Assumes package was '
+             'installed via pip -e (setuptools in \'develop\' mode).'
     )
     command_args = parser.parse_args()
 
@@ -83,12 +82,6 @@ if __name__ == "__main__":
     else:
         print('Not updating SDK as it exists. Remove {} and re-run to get the latest SDK'.format(APPENGINE_TARGET_DIR))
 
-    # Remove develop symlink (if it exists) before running pip
-    wagaetail_sitepackages_dir = os.path.join(TARGET_DIR, 'wagtail')
-    if (command_args.wagae_develop and
-            os.path.isdir(wagaetail_sitepackages_dir) and os.path.islink(wagaetail_sitepackages_dir)):
-        os.rmdir(wagaetail_sitepackages_dir)
-
     # Remove all folders and files, we leave symlinks as they will be pointing to submodules
     filenames = (filename for filename in os.listdir(TARGET_DIR) if filename not in FILES_IGNORED_FOR_DELETION)
     for filename in filenames:
@@ -103,27 +96,27 @@ if __name__ == "__main__":
     p = subprocess.Popen(args)
     p.wait()
 
-    # If develop mode, install symlink to checked out wagaetail project in sitepackages/
-    if command_args.wagae_develop:
-        print("Wagaetail development mode...")
+    # Install symlinks for editable packages supplied with --editable option
+    if command_args.editable_libs:
+        print("Installing symlinks for editable libs...")
 
-        # Check wagaetail is installed and import module
-        try:
-            wagaetail = __import__('wagtail')
-        except ImportError:
-            raise Exception("wagaetail not installed. Have you installed wagaetail into your virtualenv via "
-                            "`setup.py develop`?")
+        for package_name in command_args.editable_libs:
+            # Find local sitepackages/ path and path to installed package in environment for each editable dependency
+            local_path = os.path.join(TARGET_DIR, package_name)
+            try:
+                module = __import__(package_name)
+                env_path = os.path.dirname(module.__file__)
+            except ImportError:
+                raise Exception("{0} not installed. Have you installed {0} into your virtualenv via "
+                                "`setup.py develop`?".format(package_name))
 
-        # Get path to wagaetail module project dir
-        wagaetail_project_dir = os.path.dirname(wagaetail.__file__)
+            print("Creating symbolic link:\n  {} ->\n  {}".format(local_path, env_path))
 
-        print("Creating symbolic link:\n  {} ->\n  {}".format(
-            wagaetail_sitepackages_dir,
-            wagaetail_project_dir)
-        )
+            # Remove package distribution installed into sitepackages/ via pip above
+            if os.path.islink(local_path):
+                os.remove(local_path)
+            else:
+                shutil.rmtree(local_path)
 
-        # Remove wagaetail distribution installed via pip above
-        shutil.rmtree(wagaetail_sitepackages_dir)
-
-        # Create symbolic link to wagaetail
-        os.symlink(wagaetail_project_dir, wagaetail_sitepackages_dir)
+            # Create symbolic link to wagaetail
+            os.symlink(env_path, local_path)
