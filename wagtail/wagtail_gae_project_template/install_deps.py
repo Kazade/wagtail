@@ -81,7 +81,7 @@ def symlink_editable_lib(package_name):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description='Install wagaetail dependencies into local sitepackages/ directory along with the '
+        description='Install wagtail-gae dependencies into local sitepackages/ directory along with the '
                     'Google AppEngine SDK.'
     )
     parser.add_argument(
