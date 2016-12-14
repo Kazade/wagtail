@@ -24,7 +24,7 @@ There could be a better way to setup your local environment, but I've done it th
 
 The virtualenv will serve as the environment of a test project, a django application that will run wagtail-gae.
 
-4. Run `pip install -e .[testing,docs] -U` in wagtail-gae project root. This will install wagtail-gae into your virtualenv but instead of copying the source files into your virtualenv's `sitepackages` directory will install a symlink to current directory. This means changes to wagtail-gae will have immediate effect when you use wagtail in your virtualenv. Dependencies to generate docs and run tests are also installed.
+4. Run `pip install -e .[testing,docs] -U` in wagtail-gae project root. You may have to escape `[` and `]` in some shells. This will install wagtail-gae into your virtualenv but instead of copying the source files into your virtualenv's `sitepackages` directory will install a symlink to current directory. This means changes to wagtail-gae will have immediate effect when you use wagtail in your virtualenv. Dependencies to generate docs and run tests are also installed.
 5. Run `npm install` to install the wagtail admin frontend dependencies.
 6. Run `npm run build` to build frontend assets.
 7. `cd` out of `wagtail-gae` and create a directory under your workspace for a test project.
