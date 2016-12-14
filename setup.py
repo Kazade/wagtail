@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+import sys
+
 from wagtail.wagtailcore import __version__
 from wagtail.utils.setup import assets, sdist, check_bdist_egg
 
@@ -57,9 +59,9 @@ documentation_extras = [
 ]
 
 setup(
-    name='wagaetail',
+    name='wagtail',
     version=__version__,
-    description='A Wagtail fork that works on Google AppEngine',
+    description='A Django content management system focused on flexibility and user experience',
     author='Matthew Westcott',
     author_email='matthew.westcott@torchbox.com',
     url='http://wagtail.io/',
@@ -92,7 +94,7 @@ setup(
     },
     entry_points="""
             [console_scripts]
-            wagaetail=wagtail.bin.wagaetail:main
+            wagtail=wagtail.bin.wagaetail:main
     """,
     zip_safe=False,
     cmdclass={
