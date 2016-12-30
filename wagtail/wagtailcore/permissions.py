@@ -20,6 +20,7 @@ def get_model_permission_choices(app_label, model_name):
     """
     Return a list of permission form field choices pertaining to a given model.
     """
+    model_name = model_name.lower()
     import ipdb;ipdb.set_trace()
     global PERMISSIONS_LIST
 
