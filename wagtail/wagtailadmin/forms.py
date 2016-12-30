@@ -374,7 +374,8 @@ class BaseGroupCollectionMemberPermissionFormSet(forms.BaseFormSet):
     model with CollectionMember behaviour. Subclasses should provide attributes:
     permission_types - a list of (codename, short_label, long_label) tuples for the permissions
         being managed here
-    permission_queryset - a queryset of Permission objects for the above permissions
+    permission_choices - Django form field choices for the above permission_types
+    permissions - a list of permission codenames for the above permission_types
     default_prefix - prefix to use on form fields if one is not specified in __init__
     template = template filename
     """
@@ -389,9 +390,10 @@ class BaseGroupCollectionMemberPermissionFormSet(forms.BaseFormSet):
 
         initial_data = []
 
+        # @todo: This query will need changing
         for collection, collection_permissions in groupby(
             instance.collection_permissions.filter(
-                permission__in=self.permission_queryset,
+                permission__in=self.permissions,
             ).order_by('collection'),
             lambda cp: cp.collection
         ):
@@ -455,14 +457,16 @@ class BaseGroupCollectionMemberPermissionFormSet(forms.BaseFormSet):
         permission_ids_to_delete = []
         permission_records_to_keep = set()
 
+        # @todo: This query will need changing
         for cp in self.instance.collection_permissions.filter(
-            permission__in=self.permission_queryset,
+            permission__in=self.permissions,
         ):
             if (cp.collection, cp.permission) in final_permission_records:
                 permission_records_to_keep.add((cp.collection, cp.permission))
             else:
                 permission_ids_to_delete.append(cp.id)
 
+        # @todo: This query will need changing
         self.instance.collection_permissions.filter(id__in=permission_ids_to_delete).delete()
 
         permissions_to_add = final_permission_records - permission_records_to_keep
@@ -484,10 +488,8 @@ def collection_member_permission_formset_factory(
     model, permission_types, template, default_prefix=None
 ):
 
-    permission_queryset = Permission.objects.filter(
-        content_type__app_label=model._meta.app_label,
-        codename__in=[codename for codename, short_label, long_label in permission_types]
-    )
+    permission_choices = ((codename, long_label) for codename, short_label, long_label in permission_types)
+    permissions = [codename for codename, short_label, long_label in permission_types]
 
     if default_prefix is None:
         default_prefix = '%s_permissions' % model._meta.model_name
@@ -501,8 +503,8 @@ def collection_member_permission_formset_factory(
         collection = forms.ModelChoiceField(
             queryset=Collection.objects.all()
         )
-        permissions = forms.ModelMultipleChoiceField(
-            queryset=permission_queryset,
+        permissions = forms.MultipleChoiceField(
+            choices=permission_choices,
             required=False,
             widget=forms.CheckboxSelectMultiple
         )
@@ -512,7 +514,8 @@ def collection_member_permission_formset_factory(
         (BaseGroupCollectionMemberPermissionFormSet, ),
         {
             'permission_types': permission_types,
-            'permission_queryset': permission_queryset,
+            'permission_choices': permission_choices,
+            'permissions': permissions,
             'default_prefix': default_prefix,
             'template': template,
         }
