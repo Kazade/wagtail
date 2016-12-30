@@ -563,10 +563,10 @@ class ModelAdminGroup(WagtailRegisterable):
         for a all models grouped by this class to be assigned to Groups in
         settings.
         """
-        qs = Permission.objects.none()
+        model_group_perms = []
         for instance in self.modeladmin_instances:
-            qs = qs | instance.get_permissions_for_registration()
-        return qs
+            model_group_perms.extend(instance.get_permissions_for_registration())
+        return model_group_perms
 
     def get_admin_urls_for_registration(self):
         """
