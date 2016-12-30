@@ -7,7 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from wagtail.wagtailadmin.menu import MenuItem
 from wagtail.wagtailcore import hooks
-from wagtail.wagtailcore.permissions import site_permission_policy
+from wagtail.wagtailcore.permissions import site_permission_policy, get_model_permission_choices
 from wagtail.wagtailsites import urls
 
 
@@ -33,5 +33,4 @@ def register_sites_menu_item():
 
 @hooks.register('register_permissions')
 def register_permissions():
-    return Permission.objects.filter(content_type__app_label='wagtailcore',
-                                     codename__in=['add_site', 'change_site', 'delete_site'])
+    return get_model_permission_choices('wagtailcore', 'site')
