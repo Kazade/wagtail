@@ -7,6 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from wagtail.wagtailadmin.menu import MenuItem
 from wagtail.wagtailcore import hooks
+from wagtail.wagtailcore.permissions import get_app_permission_choices
 from wagtail.wagtailredirects import urls
 from wagtail.wagtailredirects.permissions import permission_policy
 
@@ -34,5 +35,4 @@ def register_redirects_menu_item():
 
 @hooks.register('register_permissions')
 def register_permissions():
-    return Permission.objects.filter(content_type__app_label='wagtailredirects',
-                                     codename__in=['add_redirect', 'change_redirect', 'delete_redirect'])
+    return get_app_permission_choices('wagtailredirects')
