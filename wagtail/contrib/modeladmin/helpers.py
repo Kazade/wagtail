@@ -81,11 +81,12 @@ class PermissionHelper(object):
         Return a queryset of all Permission objects pertaining to the `model`
         specified at initialisation.
         """
+        import ipdb;ipdb.set_trace()
+        global PERMISSIONS_LIST
+        model_name = self.model._meta.model_name
+        app_label = self.model._meta.app_label
 
-        return Permission.objects.filter(
-            content_type__app_label=self.opts.app_label,
-            content_type__model=self.opts.model_name,
-        )
+        return [perm for perm in PERMISSIONS_LIST if perm.startswith('{}.{}_'.format(app_label, model_name))]
 
     def get_perm_codename(self, action):
         return get_permission_codename(action, self.opts)
