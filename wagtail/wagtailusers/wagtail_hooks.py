@@ -10,6 +10,7 @@ from wagtail.wagtailadmin.menu import MenuItem
 from wagtail.wagtailadmin.search import SearchArea
 from wagtail.wagtailcore import hooks
 from wagtail.wagtailcore.compat import AUTH_USER_APP_LABEL, AUTH_USER_MODEL_NAME
+from wagtail.wagtailcore.permissions import get_model_permission_choices
 from wagtail.wagtailusers.urls import groups, users
 
 
@@ -69,14 +70,10 @@ def register_groups_menu_item():
 
 @hooks.register('register_permissions')
 def register_permissions():
-    user_permissions = Q(content_type__app_label=AUTH_USER_APP_LABEL, codename__in=[
-        'add_%s' % AUTH_USER_MODEL_NAME.lower(),
-        'change_%s' % AUTH_USER_MODEL_NAME.lower(),
-        'delete_%s' % AUTH_USER_MODEL_NAME.lower(),
-    ])
-    group_permissions = Q(content_type__app_label='auth', codename__in=['add_group', 'change_group', 'delete_group'])
+    user_permissions = get_model_permission_choices(AUTH_USER_APP_LABEL, AUTH_USER_MODEL_NAME)
+    group_permissions = get_model_permission_choices('gauth', 'Group')
 
-    return Permission.objects.filter(user_permissions | group_permissions)
+    return user_permissions + group_permissions
 
 
 class UsersSearchArea(SearchArea):
