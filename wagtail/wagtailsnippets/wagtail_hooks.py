@@ -10,6 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from wagtail.wagtailadmin.menu import MenuItem
 from wagtail.wagtailcore import hooks
+from wagtail.wagtailcore.permissions import get_model_permission_choices
 from wagtail.wagtailsnippets import urls
 from wagtail.wagtailsnippets.models import get_snippet_models
 from wagtail.wagtailsnippets.permissions import user_can_edit_snippets
@@ -52,4 +53,8 @@ def editor_js():
 @hooks.register('register_permissions')
 def register_permissions():
     content_types = ContentType.objects.get_for_models(*get_snippet_models()).values()
-    return Permission.objects.filter(content_type__in=content_types)
+    snippet_model_perms = []
+    for ct in content_types:
+        snippet_model_perms.append(get_model_permission_choices(ct.app_label, ct.model_name))
+
+    return snippet_model_perms
