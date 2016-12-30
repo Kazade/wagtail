@@ -7,6 +7,15 @@ site_permission_policy = ModelPermissionPolicy(Site)
 collection_permission_policy = ModelPermissionPolicy(Collection)
 
 
+def get_app_permission_choices(app_label):
+    """
+    Return a list of permission form field choices pertaining to a given app.
+    """
+    import ipdb;ipdb.set_trace()
+    global PERMISSIONS_LIST
+    return [choice for choice in PERMISSIONS_LIST if choice[0].startswith('{}.'.format(app_label))]
+
+
 def get_model_permission_choices(app_label, model_name):
     """
     Return a list of permission form field choices pertaining to a given model.
