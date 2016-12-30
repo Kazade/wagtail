@@ -7,6 +7,7 @@ from django.utils.text import capfirst
 
 from wagtail.wagtailadmin.menu import MenuItem
 from wagtail.wagtailcore import hooks
+from wagtail.wagtailcore.permissions import get_model_permission_choices
 
 from .permissions import user_can_edit_setting_type
 
@@ -51,9 +52,14 @@ class Registry(list):
 
         @hooks.register('register_permissions')
         def permissions_hook():
-            return Permission.objects.filter(
-                content_type__app_label=model._meta.app_label,
-                codename='change_{}'.format(model._meta.model_name))
+            app_label = model._meta.app_label
+            model_name = model._meta.model_name
+
+            # Just get the 'change' permission for this model
+            perms = get_model_permission_choices(app_label, model_name)
+            perms = [perm for perm in perms if perm.startswith("{}.{}".format(app_label, 'change'))]
+
+            return perms
 
         return model
 
