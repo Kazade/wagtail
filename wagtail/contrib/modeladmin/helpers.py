@@ -76,17 +76,25 @@ class PermissionHelper(object):
         self.opts = model._meta
         self.inspect_view_enabled = inspect_view_enabled
 
-    def get_all_model_permissions(self):
+    def get_all_model_permission_choices(self):
         """
-        Return a queryset of all Permission objects pertaining to the `model`
-        specified at initialisation.
+        Return a list of permission form field choices pertaining to the `model` specified at initialisation
         """
         import ipdb;ipdb.set_trace()
         global PERMISSIONS_LIST
         model_name = self.model._meta.model_name
         app_label = self.model._meta.app_label
 
-        return [perm for perm in PERMISSIONS_LIST if perm.startswith('{}.{}_'.format(app_label, model_name))]
+        return [choice for choice in PERMISSIONS_LIST if choice.startswith('{}.{}_'.format(app_label, model_name))]
+
+    def get_all_model_permissions(self):
+        """
+        Return a list of all permission strings pertaining to the `model` specified at initialisation.
+        """
+        # Return just the permission strings in the [(perm_str, desc), ...] list of tuples returned from
+        # get_all_model_permission_choices()
+        return [choice[0] for choice in self.get_all_model_permission_choices()]
+
 
     def get_perm_codename(self, action):
         return get_permission_codename(action, self.opts)
@@ -104,8 +112,8 @@ class PermissionHelper(object):
         Return a boolean to indicate whether `user` has any model-wide
         permissions
         """
-        for perm in self.get_all_model_permissions().values('codename'):
-            if self.user_has_specific_permission(user, perm['codename']):
+        for perm in self.get_all_model_permissions():
+            if self.user_has_specific_permission(user, perm):
                 return True
         return False
 
