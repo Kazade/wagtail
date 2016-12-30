@@ -57,7 +57,7 @@ class Registry(list):
 
             # Just get the 'change' permission for this model
             perms = get_model_permission_choices(app_label, model_name)
-            perms = [perm for perm in perms if perm.startswith("{}.{}".format(app_label, 'change'))]
+            perms = [choice for choice in perms if choice[0].startswith("{}.{}".format(app_label, 'change'))]
 
             return perms
 
