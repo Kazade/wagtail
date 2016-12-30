@@ -9,7 +9,7 @@ from wagtail.wagtailadmin.menu import MenuItem, SubmenuMenuItem, settings_menu
 from wagtail.wagtailadmin.search import SearchArea
 from wagtail.wagtailadmin.widgets import Button, ButtonWithDropdownFromHook, PageListingButton
 from wagtail.wagtailcore import hooks
-from wagtail.wagtailcore.permissions import collection_permission_policy
+from wagtail.wagtailcore.permissions import collection_permission_policy, get_app_permission_choices
 
 
 class ExplorerMenuItem(MenuItem):
@@ -43,8 +43,7 @@ def register_permissions():
     """
     Return all permissions with the `wagtailadmin` app label.
     """
-    global PERMISSIONS_LIST
-    return [choice for choice in PERMISSIONS_LIST if choice[1].startswith("wagtailadmin.")]
+    return get_app_permission_choices('wagtailadmin')
 
 
 @hooks.register('register_admin_search_area')
