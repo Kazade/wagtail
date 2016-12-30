@@ -11,6 +11,7 @@ from django.utils.http import urlquote
 from django.utils.translation import ugettext as _
 
 from wagtail.wagtailcore.models import Page, UserPagePermissionsProxy
+from wagtail.wagtailcore.permissions import get_model_permission_choices
 
 
 class AdminURLHelper(object):
@@ -78,22 +79,21 @@ class PermissionHelper(object):
 
     def get_all_model_permission_choices(self):
         """
-        Return a list of permission form field choices pertaining to the `model` specified at initialisation
+        Return a list of permission form field choices pertaining to the `model` specified at initialisation.
         """
-        import ipdb;ipdb.set_trace()
-        global PERMISSIONS_LIST
-        model_name = self.model._meta.model_name
         app_label = self.model._meta.app_label
-
-        return [choice for choice in PERMISSIONS_LIST if choice.startswith('{}.{}_'.format(app_label, model_name))]
+        model_name = self.model._meta.model_name
+        return get_model_permission_choices(app_label, model_name)
 
     def get_all_model_permissions(self):
         """
         Return a list of all permission strings pertaining to the `model` specified at initialisation.
         """
         # Return just the permission strings in the [(perm_str, desc), ...] list of tuples returned from
-        # get_all_model_permission_choices()
-        return [choice[0] for choice in self.get_all_model_permission_choices()]
+        # get_model_permission_choices()
+        app_label = self.model._meta.app_label
+        model_name = self.model._meta.model_name
+        return [choice[0] for choice in get_model_permission_choices(app_label, model_name)]
 
 
     def get_perm_codename(self, action):
