@@ -40,7 +40,11 @@ def register_settings_menu():
 
 @hooks.register('register_permissions')
 def register_permissions():
-    return Permission.objects.filter(content_type__app_label='wagtailadmin', codename='access_admin')
+    """
+    Return all permissions with the `wagtailadmin` app label.
+    """
+    global PERMISSIONS_LIST
+    return [choice for choice in PERMISSIONS_LIST if choice[1].startswith("wagtailadmin.")]
 
 
 @hooks.register('register_admin_search_area')
