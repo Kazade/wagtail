@@ -1,7 +1,6 @@
 from __future__ import absolute_import, unicode_literals
 
 from django.conf.urls import url
-from django.contrib.auth.models import Permission
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models import Model
 from django.forms.widgets import flatatt
