@@ -13,4 +13,4 @@ def get_model_permission_choices(app_label, model_name):
     """
     import ipdb;ipdb.set_trace()
     global PERMISSIONS_LIST
-    return [choice for choice in PERMISSIONS_LIST if choice[1].startswith('{}.{}_'.format(app_label, model_name))]
+    return [choice for choice in PERMISSIONS_LIST if choice[0].startswith('{}.{}_'.format(app_label, model_name))]
