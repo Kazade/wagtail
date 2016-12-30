@@ -8,6 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 from wagtail.contrib.wagtailsearchpromotions import admin_urls
 from wagtail.wagtailadmin.menu import MenuItem
 from wagtail.wagtailcore import hooks
+from wagtail.wagtailcore.permissions import get_app_permission_choices
 
 
 @hooks.register('register_admin_urls')
@@ -37,7 +38,4 @@ def register_search_picks_menu_item():
 
 @hooks.register('register_permissions')
 def register_permissions():
-    return Permission.objects.filter(
-        content_type__app_label='wagtailsearchpromotions',
-        codename__in=['add_searchpromotion', 'change_searchpromotion', 'delete_searchpromotion']
-    )
+    return get_app_permission_choices('wagtailsearchpromotions')
