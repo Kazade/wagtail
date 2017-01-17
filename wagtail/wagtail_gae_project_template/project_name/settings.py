@@ -8,7 +8,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.8/ref/settings/
 """
 
-from djangae.settings_base import * #Set up some AppEngine specific stuff
+from djangae.settings_base import *  # Set up some AppEngine specific stuff
 from django.core.urlresolvers import reverse_lazy
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -29,7 +29,7 @@ DEBUG = True
 # Application definition
 
 INSTALLED_APPS = (
-    'djangae', # Djangae needs to come before django apps in django 1.7 and above
+    'djangae',  # Djangae needs to come before django apps in django 1.7 and above
     
     '{{ project_name }}',
     'home',
@@ -102,7 +102,7 @@ TEMPLATES = [
 ]
 
 SILENCED_SYSTEM_CHECKS = [
-    'security.W003', # We're using session_csrf version of CsrfMiddleware, so we can skip that check
+    'security.W003',  # We're using session_csrf version of CsrfMiddleware, so we can skip that check
 ]
 from .boot import register_custom_checks
 register_custom_checks()

@@ -37,7 +37,7 @@ def create_project(parser, options, args):
     # First find the path to wagtail
     import wagtail
     wagtail_path = os.path.dirname(wagtail.__file__)
-    template_path = os.path.join(wagtail_path, 'project_template')
+    template_path = os.path.join(wagtail_path, 'wagtail_gae_project_template')
 
     # Call django-admin startproject
     utility_args = ['django-admin.py',

@@ -94,7 +94,7 @@ setup(
     },
     entry_points="""
             [console_scripts]
-            wagtail=wagtail.bin.wagtail:main
+            wagtail=wagtail.bin.wagaetail:main
     """,
     zip_safe=False,
     cmdclass={
