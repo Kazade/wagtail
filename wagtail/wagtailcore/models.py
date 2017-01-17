@@ -6,7 +6,7 @@ from collections import defaultdict
 from django import VERSION as DJANGO_VERSION
 
 from django.conf import settings
-from django.contrib.auth.models import Group, Permission
+from django.contrib.auth.models import Group
 from django.contrib.contenttypes.models import ContentType
 from django.core import checks
 from django.core.cache import cache
@@ -1855,11 +1855,7 @@ class GroupCollectionPermission(models.Model):
         related_name='group_permissions',
         on_delete=models.CASCADE
     )
-    permission = models.ForeignKey(
-        Permission,
-        verbose_name=_('permission'),
-        on_delete=models.CASCADE
-    )
+    permission = models.CharField(max_length=500, verbose_name=_('permission'))
 
     def __str__(self):
         return "Group %d ('%s') has permission '%s' on collection %d ('%s')" % (
