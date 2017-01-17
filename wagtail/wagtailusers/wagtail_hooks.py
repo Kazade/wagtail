@@ -1,9 +1,7 @@
 from __future__ import absolute_import, unicode_literals
 
 from django.conf.urls import include, url
-from django.contrib.auth.models import Permission
 from django.core import urlresolvers
-from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 
 from wagtail.wagtailadmin.menu import MenuItem
